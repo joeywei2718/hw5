@@ -6,43 +6,43 @@ public class Main {
         Node newNode = new Node("https://en.wikipedia.org/wiki/Computer_keyboard");
         newNode.scrape();
 
-
         HashMap<String, ArrayList<String>> graphData = new HashMap<>();
-        String url = "https://en.wikipedia.org/wiki/Lemar_Aftaab";
-        crawl(graphData, url);
-        crawl(graphData, "https://en.wikipedia.org/wiki/Computer_keyboard");
-        crawl(graphData, "https://en.wikipedia.org/wiki/Chocolate");
-        crawl(graphData, "https://en.wikipedia.org/wiki/Pittsburgh_Penguins");
+        HashMap<String, ArrayList<String>> fullTraversal = new HashMap<>();
+
+        crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Lemar_Aftaab");
+        crawl(graphData, fullTraversal,"https://en.wikipedia.org/wiki/Computer_keyboard");
+        crawl(graphData, fullTraversal,"https://en.wikipedia.org/wiki/Chocolate");
+        crawl(graphData, fullTraversal,"https://en.wikipedia.org/wiki/Pittsburgh_Penguins");
 
         System.out.println(graphData);
+        System.out.println(fullTraversal);
         Visualizer visual = new Visualizer(graphData);
 
 
     }
 
-    public static void crawl(HashMap<String, ArrayList<String>> graphData, String url) {
-        String parent = null;
+
+    public static void crawl(HashMap<String, ArrayList<String>> graphData, HashMap<String, ArrayList<String>> traverse, String url) {
+        Node root = new Node(url);
+        String rootName = root.getSelfTitle();
+        String parent = rootName;
+
         for (int i = 0; i < 25; i++) {
-            if (parent == null) {
-                Node current = new Node(url);
-                url = current.getFirstURL();
-                parent = current.getSelfTitle();
-                if(current.getSelfTitle().equalsIgnoreCase("philosophy")) {
-                    graphData.put("Philosophy", new ArrayList<>());
-                    break;
-                }
-            } else {
-                Node current = new Node(url);
-                if (!graphData.containsKey(parent)){
-                    graphData.put(parent, new ArrayList<>());
-                }
-                graphData.get(parent).add(current.getSelfTitle());
-                parent = current.getSelfTitle();
-                url = current.getFirstURL();
-                if(current.getSelfTitle().equalsIgnoreCase("philosophy")) {
-                    graphData.put("Philosophy", new ArrayList<>());
-                    break;
-                }
+            Node current = new Node(url);
+            String currentTitle = current.getSelfTitle();
+
+            if (!graphData.containsKey(parent))
+                graphData.put(parent, new ArrayList<>());
+
+            graphData.get(parent).add(currentTitle);
+            traverse.computeIfAbsent(rootName, k -> new ArrayList<>()).add(currentTitle);
+
+            parent = currentTitle;
+            url = current.getFirstURL();
+
+            if (currentTitle.equalsIgnoreCase("philosophy")) {
+                graphData.put("Philosophy", new ArrayList<>());
+                break;
             }
         }
     }

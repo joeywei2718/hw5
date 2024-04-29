@@ -1,5 +1,6 @@
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.*;
+import org.graphstream.ui.graphicGraph.stylesheet.Color;
 import org.graphstream.ui.layout.Layout;
 import org.graphstream.ui.view.Viewer;
 
@@ -9,6 +10,8 @@ import java.util.HashMap;
 import static org.graphstream.ui.layout.Layouts.newLayoutAlgorithm;
 
 public class Visualizer {
+
+
     public Visualizer(HashMap<String, ArrayList<String>> crawlGraph) {
 
         System.setProperty("org.graphstream.ui", "swing");
@@ -25,19 +28,32 @@ public class Visualizer {
             // Add node
             Node node = graph.addNode(key);
             node.setAttribute("ui.label", key);
-            node.setAttribute("ui.style", "text-size: 14;"); // Larger text size
-            node.setAttribute("ui.label.position", "20 below"); // Position label 10 units below the node
+            if (key.equalsIgnoreCase("Philosophy")) {
 
+                node.setAttribute("ui.style", "fill-color: red; text-size: 14; text-style: bold;");
+                node.setAttribute("xyz", 1, 3, 0);
+
+
+            }
+            else {
+                node.setAttribute("ui.style", "fill-color: green; text-size: 12;");
+
+                node.setAttribute("ui.label.position", "10, -40"); // Position label 10 units below the node
+            }
             // Add edges
             for (String connectedNode : connectedNodes) {
-                graph.addEdge(key + connectedNode, key, connectedNode);
+                if (!key.equals(connectedNode)) {
+                    graph.setAttribute("ui.stylesheet", "edge {arrow-shape: arrow; }");
+                    graph.addEdge(key + connectedNode, key, connectedNode, true);
+                }
             }
         }
 
         Viewer view = graph.display();
 
         Layout layout = newLayoutAlgorithm();
-        layout.setForce(2);
+        layout.setForce(1);
+
         view.enableAutoLayout();
     }
 }
