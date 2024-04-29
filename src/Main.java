@@ -9,6 +9,7 @@ public class Main {
         HashMap<String, ArrayList<String>> graphData = new HashMap<>();
         HashMap<String, ArrayList<String>> fullTraversal = new HashMap<>();
 
+
         crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Lemar_Aftaab");
         crawl(graphData, fullTraversal,"https://en.wikipedia.org/wiki/Computer_keyboard");
         crawl(graphData, fullTraversal,"https://en.wikipedia.org/wiki/Chocolate");

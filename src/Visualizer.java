@@ -35,6 +35,7 @@ public class Visualizer {
 
 
             }
+
             else {
                 node.setAttribute("ui.style", "fill-color: green; text-size: 12;");
 
