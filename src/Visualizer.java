@@ -1,6 +1,6 @@
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.*;
-import org.graphstream.ui.graphicGraph.stylesheet.Color;
+
 import org.graphstream.ui.layout.Layout;
 import org.graphstream.ui.view.Viewer;
 
