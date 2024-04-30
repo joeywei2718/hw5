@@ -157,6 +157,32 @@ public class Main {
         }
         return true;
     }
+
+    /*
+    Works from the fullTraversal HashMap data structure. Input is structured as follows:
+
+    [ [StartingLink1, [FirstLink, SecondLink, ThirdLink,...,Philosophy]],
+      [StartingLink2, [FirstLink, SecondLink, ThirdLink,...,Philosophy]],
+      ...
+    ]
+
+    Selects loops through key + value pairs,
+
+    For each KV pair, loop through the other KV pairs.
+
+    For each combination of KV pairs, perform the following algorithm:
+
+    Select value Arrays of (Array of the links) for both KV's, and SUM
+
+    Loop through sum. For values that appear in both entries, remove them from the SUM array.
+
+    Take length of the array.
+
+    If the paths converge to Philosophy (the node graphs for the two links are connected), add this length to the output array
+
+    If Philosophy is not present (disconnected node graphs), report distance as N/A
+
+     */
     public static ArrayList<ArrayList<String>> distance(HashMap<String, ArrayList<String>> dist) {
 
         ArrayList<ArrayList<String>> distances = new ArrayList<>();
@@ -195,7 +221,47 @@ public class Main {
         }
         return distances;
     }
+    /*
 
+    Works from the fullTraversal HashMap data structure. Input is structured as follows:
+
+    [ [StartingLink1, [FirstLink, SecondLink, ThirdLink,...,Philosophy]],
+      [StartingLink2, [FirstLink, SecondLink, ThirdLink,...,Philosophy]],
+      ...
+    ]
+
+    For each KV pair (Entry in the hashmap), loop through the other KV pairs.
+
+    For each combination of KV pairs, perform the following algorithm:
+
+    Check if it is comparing the same KV pair. If yes, break.
+
+    Loop through the Value Arrays. If an element is present in both Value Arrays, add to the temp Array.
+
+    If Temp is not empty, get the first shared element. This is the first intersection, and the convergence of the two traversals.
+
+    If not already in the intersect list, add element to intersect.
+
+    Creates array intersect, which is an array of all the nodes that are convergence points for all of the starting links.
+
+    Then, find the respective starting links that pass through each convergence point.
+
+    Loop through the list of convergence nodes.
+
+    For each possible convergence node, loop through the fullTraversal HashMap.
+
+    If the convergence node appears in the Value array of a given link key, add this key to the clusterMap value.
+
+    Possible final output is of form:
+
+
+    [[Science, [StartingLink1, StartingLink2]],
+     [Physics, [StartingLink1,StartingLink3]],
+     [Geography, [StartingLink2,StartingLink3]
+    ]
+
+    Where Science, Phyiscs, and Geography are convergence points for the starting links.
+     */
     public static HashMap<String, ArrayList<String>> cluster(HashMap<String, ArrayList<String>> clusters) {
         HashMap<String, ArrayList<String>> clusterMap = new HashMap<>();
         ArrayList<String> clusterList = new ArrayList<>();
