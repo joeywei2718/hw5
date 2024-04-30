@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Graph {
+public class KMeans {
     // Goals:
     private final HashMap<Node, Integer> nodeToInt;
     private final HashMap<Integer, Node> intToNode;
@@ -15,7 +15,7 @@ public class Graph {
      * Constructor for a Wikipedia graph with a specified adjacency list.
      * @param Network Hashmap representing
      */
-    public Graph(HashMap<Node, Integer> Network, HashMap<Node, LinkedList<Node>> adjacency) {
+    public KMeans(HashMap<Node, Integer> Network, HashMap<Node, LinkedList<Node>> adjacency) {
         // Instantiate the dictionaries between node numbers and the actual node object
         this.nodeToInt = Network;
         this.intToNode = new HashMap<>();
@@ -41,7 +41,7 @@ public class Graph {
      * Constructor for a Wikipedia graph without an adjacency list already available.
      * @param Network Hashmap representing
      */
-    public Graph(HashMap<Node, Integer> Network) {
+    public KMeans(HashMap<Node, Integer> Network) {
         // Instantiate the dictionaries between node numbers and the actual node object
         this.nodeToInt = Network;
         this.intToNode = new HashMap<>();
@@ -127,38 +127,28 @@ public class Graph {
         maxNode += 1;
     }
 
-    /**
-     * Perform Girvan Newman clustering.
-     * @param numOfCommunities The number of communities.
-     */
-    public void girvanNyewman(int numOfCommunities) {
-        return;
+    ArrayList<Document> docs = new ArrayList<>();
+    public void getDocument(String file) {
+
+        try {
+            Document current = new Document(file);
+            docs.add(current);
+
+        }
+        catch (NullPointerException e){
+            System.out.println("File Not Found");
+        }
     }
 
-    /**
-     * For every node in the graph, save a document in the documentList.
-     */
-    public HashMap<Node, Document> obtainAndUpdateDocuments() {
-        HashMap<Node, Document> documentMap = new HashMap<>();
-        for (Node n: nodeToInt.keySet()) {
-            n.searchLink();
-            // TODO: Replace currentDoc with actual Document object
-            Document currentDoc = new Document(n.getSelfTitle()+".txt");
-            documentMap.put(n, currentDoc);
-        }
-        return documentMap;
-    }
 
     /**
      * Compute and return embeddings for each of the nodes/documents.
      */
     public HashMap<Document, HashMap<String, Double>> computeEmbeddings() {
         // Obtain list of documents to feed to corpus
-        Collection<Document> documentSet = this.obtainAndUpdateDocuments().values();
-        ArrayList<Document> documentList = new ArrayList<>(documentSet);
 
         // Instantiate model
-        Corpus corpus = new Corpus(documentList);
+        Corpus corpus = new Corpus(docs);
         VectorSpaceModel vectorSpace = new VectorSpaceModel(corpus);
         vectorSpace.createTfIdfWeights();
         return vectorSpace.getTfIdfWeights();

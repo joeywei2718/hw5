@@ -5,6 +5,8 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) throws IOException {
 
+        HashMap<Node, Integer> h = new HashMap<>();
+        KMeans k = new KMeans(h);
 
 
 
@@ -13,20 +15,40 @@ public class Main {
 
         Scanner input = new Scanner(System.in);
 
+
+
         System.out.println("Wikipedia Traversal + Graph Program - NETS150 HW5");
         System.out.println("Type - 1 - to run demo, type - 2 - to input custom parameters");
         String select = input.next();
         input.nextLine();
 
+        ArrayList<String> demoURLs = new ArrayList<>();
+        demoURLs.add("https://en.wikipedia.org/wiki/Morse_Code");
+        demoURLs.add("https://en.wikipedia.org/wiki/Green");
+        demoURLs.add("https://en.wikipedia.org/wiki/Pablo_Picasso");
+        demoURLs.add("https://en.wikipedia.org/wiki/Beer");
+        demoURLs.add("https://en.wikipedia.org/wiki/Calculus");
+        demoURLs.add("https://en.wikipedia.org/wiki/Python_(programming_language)");
+
+
         if (select.equals("1")) {
-            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Morse_Code");
-            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Green");
-            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Pablo_Picasso");
-            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Beer");
-            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Calculus");
-            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Python_(programming_language)");
+
+            for (String url:demoURLs) {
+
+                crawl(graphData, fullTraversal, url);
+                Node temp = new Node(url);
+                temp.searchLink();
+                temp.scrape();
+                k.getDocument(temp.selfTitle +".txt");
 
 
+            }
+            k.computeEmbeddings();
+
+            HashMap<HashMap<String, Double>, LinkedList<Document>> output = k.kMeans(false,3,3);
+            System.out.println("\n");
+            System.out.println("K-Means Document Vector Analysis Grouping");
+            System.out.println(output.values() + "\n");
 
             System.out.println("Do all the links converge to Philosophy?");
             System.out.println(converge(fullTraversal) + "\n");
@@ -41,7 +63,7 @@ public class Main {
 
                 System.out.println("Node Distances of " + link.getFirst() + " to:");
 
-                System.out.println(link.subList(1, link.size()));
+                System.out.println(link.subList(1, link.size()) + "\n");
 
             }
             Visualizer visual = new Visualizer(graphData);
@@ -61,8 +83,17 @@ public class Main {
             for (String link:links) {
 
                 crawl(graphData,fullTraversal,link);
+                Node temp = new Node(link);
+                temp.searchLink();
+                temp.scrape();
+                k.getDocument(temp.selfTitle +".txt");
 
             }
+
+            k.computeEmbeddings();
+
+            HashMap<HashMap<String, Double>, LinkedList<Document>> output = k.kMeans(false,3,3);
+
             Visualizer visual = new Visualizer(graphData);
             System.out.println("Drag nodes to move the graph around. Philosophy is highlighted in red.");
             boolean running = true;
@@ -73,7 +104,8 @@ public class Main {
                 System.out.println("1 - Node Distances between links");
                 System.out.println("2 - Node Clustering Points");
                 System.out.println("3 - Convergence to Philosophy");
-                System.out.println("4 - Close Program");
+                System.out.println("4 - K-Means Document Vector Analysis Grouping");
+                System.out.println("5 - Close Program");
                 int in = input.nextInt();
 
                 switch(in) {
@@ -87,7 +119,7 @@ public class Main {
 
                             System.out.println("Node Distances of " + link.getFirst() + " to:");
 
-                            System.out.println(link.subList(1, link.size()));
+                            System.out.println(link.subList(1, link.size()) + "\n");
 
                         }
 
@@ -105,8 +137,13 @@ public class Main {
                         System.out.println("Do all of the links converge to Philosophy?");
                         System.out.println(converge(fullTraversal));
                         break;
-
                     case 4:
+
+                        System.out.println("K-Means Groups");
+                        System.out.println(output.values() + "\n");
+
+                        break;
+                    case 5:
                         running = false;
                         System.out.println("Closing...");
                         break;
@@ -119,10 +156,12 @@ public class Main {
         input.close();
     }
 
-    public static void crawl(HashMap<String, ArrayList<String>> graphData, HashMap<String, ArrayList<String>> traverse, String url) {
+    public static void crawl(HashMap<String, ArrayList<String>> graphData, HashMap<String, ArrayList<String>> traverse, String url) throws IOException {
         Node root = new Node(url);
         String rootName = root.getSelfTitle();
         String parent = rootName;
+
+
 
         for (int i = 0; i < 25; i++) {
             Node current = new Node(url);

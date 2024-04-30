@@ -20,6 +20,7 @@ public class Node {
         //Calls for traversal of site to find first link
         this.searchLink();
 
+
     }
 
     public String getSelfURL() {return this.selfURL;}
