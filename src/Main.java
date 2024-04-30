@@ -178,7 +178,9 @@ public class Main {
 
     Take length of the array.
 
-    If the paths converge to Philosophy (the node graphs for the two links are connected), add this length to the output array
+    This corresponds to the length of the disjoint sum of the traversal, which is the node distance.
+
+    If the overall paths pass through Philosophy (the node graphs for the two links are connected), add this length to the output array
 
     If Philosophy is not present (disconnected node graphs), report distance as N/A
 
