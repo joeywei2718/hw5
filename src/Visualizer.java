@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import static org.graphstream.ui.layout.Layouts.newLayoutAlgorithm;
 
+//graphStream package to visuzalize graph data structure
 public class Visualizer {
 
 
@@ -28,18 +29,17 @@ public class Visualizer {
             // Add node
             Node node = graph.addNode(key);
             node.setAttribute("ui.label", key);
+            //Plot Philosophy node differently
             if (key.equalsIgnoreCase("Philosophy")) {
 
                 node.setAttribute("ui.style", "fill-color: red; text-size: 14; text-style: bold;");
                 node.setAttribute("xyz", 1, 3, 0);
 
-
             }
-
             else {
                 node.setAttribute("ui.style", "fill-color: green; text-size: 12;");
 
-                node.setAttribute("ui.label.position", "10, -40"); // Position label 10 units below the node
+                node.setAttribute("ui.label.position", "10, -40");
             }
             // Add edges
             for (String connectedNode : connectedNodes) {
@@ -54,7 +54,7 @@ public class Visualizer {
 
         Layout layout = newLayoutAlgorithm();
         layout.setForce(2);
-
+        //Set force to help untangle plot
         view.enableAutoLayout();
     }
 }

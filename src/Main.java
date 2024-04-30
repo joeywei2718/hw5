@@ -5,14 +5,16 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        HashMap<Node, Integer> h = new HashMap<>();
-        KMeans k = new KMeans(h);
 
+        KMeans k = new KMeans();
 
+        //Create kMeans object
 
         HashMap<String, ArrayList<String>> graphData = new HashMap<>();
         HashMap<String, ArrayList<String>> fullTraversal = new HashMap<>();
 
+        // Create graphData for graphStream plotting
+        // Create fullTraversal to store traversal data structure
         Scanner input = new Scanner(System.in);
 
 
@@ -30,7 +32,7 @@ public class Main {
         demoURLs.add("https://en.wikipedia.org/wiki/Calculus");
         demoURLs.add("https://en.wikipedia.org/wiki/Python_(programming_language)");
 
-
+        // Demo mode
         if (select.equals("1")) {
 
             for (String url:demoURLs) {
@@ -45,7 +47,7 @@ public class Main {
             }
             k.computeEmbeddings();
 
-            HashMap<HashMap<String, Double>, LinkedList<Document>> output = k.kMeans(false,3,3);
+            HashMap<HashMap<String, Double>, LinkedList<Document>> output = k.kMeans(3,3);
             System.out.println("\n");
             System.out.println("K-Means Document Vector Analysis Grouping");
             System.out.println(output.values() + "\n");
@@ -68,7 +70,7 @@ public class Main {
             }
             Visualizer visual = new Visualizer(graphData);
         }
-
+        //User input mode
         else if(select.equals("2")) {
             ArrayList<String> links = new ArrayList<>();
             System.out.println("How many Wikipedia links would you like to add to the graph/traversal? (1-10)");
@@ -92,7 +94,7 @@ public class Main {
 
             k.computeEmbeddings();
 
-            HashMap<HashMap<String, Double>, LinkedList<Document>> output = k.kMeans(false,3,3);
+            HashMap<HashMap<String, Double>, LinkedList<Document>> output = k.kMeans(3,3);
 
             Visualizer visual = new Visualizer(graphData);
             System.out.println("Drag nodes to move the graph around. Philosophy is highlighted in red.");
