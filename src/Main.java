@@ -5,38 +5,117 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        Node newNode = new Node("https://en.wikipedia.org/wiki/Computer_keyboard");
-        newNode.scrape();
+
+
 
         HashMap<String, ArrayList<String>> graphData = new HashMap<>();
         HashMap<String, ArrayList<String>> fullTraversal = new HashMap<>();
-        HashMap<String, ArrayList<String>> clusters = new HashMap<>();
+
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Wikipedia Traversal + Graph Program - NETS150 HW5");
+        System.out.println("Type - 1 - to run demo, type - 2 - to input custom parameters");
+        String select = input.next();
+        input.nextLine();
+
+        if (select.equals("1")) {
+            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Lemar_Aftaab");
+            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Computer_keyboard");
+            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Chocolate");
+            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Pittsburgh_Penguins");
+            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Boeing_747");
 
 
-        crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Lemar_Aftaab");
-        crawl(graphData, fullTraversal,"https://en.wikipedia.org/wiki/Computer_keyboard");
-        crawl(graphData, fullTraversal,"https://en.wikipedia.org/wiki/Chocolate");
-        crawl(graphData, fullTraversal,"https://en.wikipedia.org/wiki/Pittsburgh_Penguins");
-        crawl(graphData, fullTraversal,"https://en.wikipedia.org/wiki/Boeing_747");
+            System.out.println("Do all the links converge to Philosophy?");
+            System.out.println(converge(fullTraversal) + "\n");
 
-        //System.out.println(graphData);
-        System.out.println(cluster(fullTraversal));
-        //System.out.println(fullTraversal);
-        //System.out.println(distance(fullTraversal));
+            System.out.println("Which links are convergence points for multiple links?");
+            System.out.println(cluster(fullTraversal)+ "\n");
 
-        ArrayList<ArrayList<String>> distances = distance(fullTraversal);
 
-        for(ArrayList<String> link : distances) {
+            ArrayList<ArrayList<String>> distances = distance(fullTraversal);
+            System.out.println("What are the node distances between the links?");
+            for (ArrayList<String> link : distances) {
 
-            System.out.println("Node Distances of " +link.getFirst() + " to:");
+                System.out.println("Node Distances of " + link.getFirst() + " to:");
 
-            System.out.println(link.subList(1, link.size()));
+                System.out.println(link.subList(1, link.size()));
+
+            }
+            Visualizer visual = new Visualizer(graphData);
+        }
+
+        else if(select.equals("2")) {
+            ArrayList<String> links = new ArrayList<>();
+            System.out.println("How many Wikipedia links would you like to add to the graph/traversal? (1-10)");
+            int count = input.nextInt();
+            input.nextLine();
+            for(int i = 0; i < count; i++) {
+                System.out.println("Paste Wikipedia link #" + (i+1));
+                String link = input.nextLine();
+                links.add(link);
+            }
+
+            for (String link:links) {
+
+                crawl(graphData,fullTraversal,link);
+
+            }
+            Visualizer visual = new Visualizer(graphData);
+            System.out.println("Drag nodes to move the graph around. Philosophy is highlighted in red.");
+            boolean running = true;
+
+            while (running) {
+
+                System.out.println("Analytics:");
+                System.out.println("1 - Node Distances between links");
+                System.out.println("2 - Node Clustering Points");
+                System.out.println("3 - Convergence to Philosophy");
+                System.out.println("4 - Close Program");
+                int in = input.nextInt();
+
+                switch(in) {
+                    case 1:
+
+                        System.out.println("Lists the node distance between each link and every other link, using the \n" );
+                        System.out.println("generated graph structure from the traversal");
+                        ArrayList<ArrayList<String>> distances = distance(fullTraversal);
+
+                        for (ArrayList<String> link : distances) {
+
+                            System.out.println("Node Distances of " + link.getFirst() + " to:");
+
+                            System.out.println(link.subList(1, link.size()));
+
+                        }
+
+                        break;
+
+                    case 2:
+                        System.out.println("Lists nodes that serve as clustering hubs, and lists which links converge to these hubs.");
+                        System.out.println("Serves as the convergence point of the traversals.");
+                        System.out.println(cluster(fullTraversal));
+                        break;
+
+
+                    case 3:
+
+                        System.out.println("Do all of the links converge to Philosophy?");
+                        System.out.println(converge(fullTraversal));
+                        break;
+
+                    case 4:
+                        running = false;
+                        System.out.println("Closing...");
+                        break;
+
+                }
+
+            }
 
         }
-        Visualizer visual = new Visualizer(graphData);
-
+        input.close();
     }
-
 
     public static void crawl(HashMap<String, ArrayList<String>> graphData, HashMap<String, ArrayList<String>> traverse, String url) {
         Node root = new Node(url);
@@ -63,6 +142,19 @@ public class Main {
         }
     }
 
+    public static boolean converge(HashMap<String, ArrayList<String>> x) {
+        for (Map.Entry<String, ArrayList<String>> select: x.entrySet()) {
+
+            ArrayList<String> path = x.get(select.getKey());
+            String finalLink = path.getLast();
+
+            if (!finalLink.equalsIgnoreCase("philosophy")){
+
+                return false;
+            }
+        }
+        return true;
+    }
     public static ArrayList<ArrayList<String>> distance(HashMap<String, ArrayList<String>> dist) {
 
         ArrayList<ArrayList<String>> distances = new ArrayList<>();
