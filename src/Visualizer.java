@@ -53,7 +53,7 @@ public class Visualizer {
         Viewer view = graph.display();
 
         Layout layout = newLayoutAlgorithm();
-        layout.setForce(1);
+        layout.setForce(2);
 
         view.enableAutoLayout();
     }
