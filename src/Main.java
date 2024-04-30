@@ -19,11 +19,13 @@ public class Main {
         input.nextLine();
 
         if (select.equals("1")) {
-            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Lemar_Aftaab");
-            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Computer_keyboard");
-            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Chocolate");
-            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Pittsburgh_Penguins");
-            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Boeing_747");
+            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Morse_Code");
+            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Green");
+            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Pablo_Picasso");
+            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Beer");
+            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Calculus");
+            crawl(graphData, fullTraversal, "https://en.wikipedia.org/wiki/Python_(programming_language)");
+
 
 
             System.out.println("Do all the links converge to Philosophy?");
@@ -180,7 +182,13 @@ public class Main {
                     }
                 }
                 String differenceInt = String.valueOf(unique.size());
-                em.add(otherentry.getKey() + ": "+ differenceInt);
+                if (l1.contains("Philosophy")) {
+                    em.add(otherentry.getKey() + ": " + differenceInt);
+                }
+                else {
+                    em.add(otherentry.getKey() + ": NA");
+
+                }
             }
             em.addFirst(selectentry.getKey());
             distances.add(em);
