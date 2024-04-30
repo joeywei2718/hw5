@@ -88,7 +88,8 @@ public class Node {
             if (parentTag.tagName().equals("p") &&
                     !parentTag.parent().tagName().equals("td") &&
                     !link.attr("title").equals("Help:Pronunciation respelling key") &&
-                    !link.attr("title").contains("language")
+                    !link.attr("title").contains("language") &&
+                    !link.attr("title").contains("English")
             ) {
                 String text = link.text();
                 String url2 = link.absUrl("href");
