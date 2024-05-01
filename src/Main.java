@@ -5,9 +5,7 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-
         KMeans k = new KMeans();
-
         //Create kMeans object
 
         HashMap<String, ArrayList<String>> graphData = new HashMap<>();
@@ -16,8 +14,6 @@ public class Main {
         // Create graphData for graphStream plotting
         // Create fullTraversal to store traversal data structure
         Scanner input = new Scanner(System.in);
-
-
 
         System.out.println("Wikipedia Traversal + Graph Program - NETS150 HW5");
         System.out.println("Type - 1 - to run demo, type - 2 - to input custom parameters");
@@ -31,58 +27,25 @@ public class Main {
         demoURLs.add("https://en.wikipedia.org/wiki/Beer");
         demoURLs.add("https://en.wikipedia.org/wiki/Calculus");
         demoURLs.add("https://en.wikipedia.org/wiki/Python_(programming_language)");
-
+        ArrayList<String> links = new ArrayList<>();
         // Demo mode
         if (select.equals("1")) {
-
-            for (String url:demoURLs) {
-
-                crawl(graphData, fullTraversal, url);
-                Node temp = new Node(url);
-                temp.searchLink();
-                temp.scrape();
-                k.getDocument(temp.selfTitle +".txt");
-
-
-            }
-            k.computeEmbeddings();
-
-            HashMap<HashMap<String, Double>, LinkedList<Document>> output = k.kMeans(3,3);
-            System.out.println("\n");
-            System.out.println("K-Means Document Vector Analysis Grouping");
-            System.out.println(output.values() + "\n");
-
-            System.out.println("Do all the links converge to Philosophy?");
-            System.out.println(converge(fullTraversal) + "\n");
-
-            System.out.println("Which links are convergence points for multiple links?");
-            System.out.println(cluster(fullTraversal)+ "\n");
-
-
-            ArrayList<ArrayList<String>> distances = distance(fullTraversal);
-            System.out.println("What are the node distances between the links?");
-            for (ArrayList<String> link : distances) {
-
-                System.out.println("Node Distances of " + link.getFirst() + " to:");
-
-                System.out.println(link.subList(1, link.size()) + "\n");
-
-            }
-            Visualizer visual = new Visualizer(graphData);
+            links = demoURLs;
         }
         //User input mode
         else if(select.equals("2")) {
-            ArrayList<String> links = new ArrayList<>();
+
             System.out.println("How many Wikipedia links would you like to add to the graph/traversal? (1-10)");
             int count = input.nextInt();
             input.nextLine();
-            for(int i = 0; i < count; i++) {
-                System.out.println("Paste Wikipedia link #" + (i+1));
+            for (int i = 0; i < count; i++) {
+                System.out.println("Paste Wikipedia link #" + (i + 1));
                 String link = input.nextLine();
                 links.add(link);
             }
+        }
 
-            for (String link:links) {
+        for (String link:links) {
 
                 crawl(graphData,fullTraversal,link);
                 Node temp = new Node(link);
@@ -90,24 +53,25 @@ public class Main {
                 temp.scrape();
                 k.getDocument(temp.selfTitle +".txt");
 
-            }
+        }
 
-            k.computeEmbeddings();
+        k.computeEmbeddings();
 
-            HashMap<HashMap<String, Double>, LinkedList<Document>> output = k.kMeans(3,3);
+        HashMap<HashMap<String, Double>, LinkedList<Document>> output = k.kMeans(3,3);
 
-            Visualizer visual = new Visualizer(graphData);
-            System.out.println("Drag nodes to move the graph around. Philosophy is highlighted in red.");
-            boolean running = true;
+        Visualizer visual = new Visualizer(graphData);
+        System.out.println("Drag nodes to move the graph around. Philosophy is highlighted in red.");
+        boolean running = true;
 
-            while (running) {
+        while (running) {
 
                 System.out.println("Analytics:");
                 System.out.println("1 - Node Distances between links");
                 System.out.println("2 - Node Clustering Points");
                 System.out.println("3 - Convergence to Philosophy");
                 System.out.println("4 - K-Means Document Vector Analysis Grouping");
-                System.out.println("5 - Close Program");
+                System.out.println("5 - Distance to Philosophy");
+                System.out.println("6 - Close Program");
                 int in = input.nextInt();
 
                 switch(in) {
@@ -146,13 +110,16 @@ public class Main {
 
                         break;
                     case 5:
+                        System.out.println("Link/Node Distance to Philosophy" + "\n");
+                        distToPhilosophy(fullTraversal);
+                        break;
+
+                    case 6:
                         running = false;
                         System.out.println("Closing...");
                         break;
 
                 }
-
-            }
 
         }
         input.close();
@@ -351,6 +318,23 @@ public class Main {
         }
 
         return clusterMap;
+    }
+
+    public static void distToPhilosophy(HashMap<String, ArrayList<String>> x) {
+
+        for (Map.Entry<String, ArrayList<String>> link : x.entrySet()) {
+
+            if (link.getValue().getLast().equalsIgnoreCase("Philosophy")) {
+
+                System.out.println(link.getKey()+": " + (link.getValue().size() - 1));
+            }
+            else {
+
+                System.out.println(link.getKey()+": N/A");
+            }
+        }
+
+
     }
 
 }
